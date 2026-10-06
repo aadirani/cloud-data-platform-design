@@ -1,0 +1,22 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: End-to-end pipeline and cost comparison
+        run: |
+          python -m lakehouse generate
+          python -m lakehouse run
+          head -n 6 build/gold/daily_desk_symbol.csv
+          python -m lakehouse cost

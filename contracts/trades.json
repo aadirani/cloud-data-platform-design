@@ -1,0 +1,19 @@
+{
+  "name": "silver.trades",
+  "description": "One row per trade, latest version only. Source: trading system export.",
+  "owner": "trading-data-team",
+  "primary_key": ["trade_id"],
+  "partition_by": "trade_date",
+  "freshness": "loaded by 06:00 UTC for the previous day",
+  "columns": {
+    "trade_id":    {"type": "string", "pattern": "^TR\\d{5}$"},
+    "version":     {"type": "int", "min": 1},
+    "desk":        {"type": "string", "allowed": ["spot", "otc", "derivatives"]},
+    "symbol":      {"type": "string", "normalize": "upper", "pattern": "^[A-Z]{2,10}USDT$"},
+    "side":        {"type": "string", "allowed": ["buy", "sell"]},
+    "quantity":    {"type": "float", "min_exclusive": 0},
+    "price":       {"type": "float", "min_exclusive": 0},
+    "client_id":   {"type": "string", "pattern": "^C\\d{3}$", "classification": "confidential"},
+    "executed_at": {"type": "timestamp"}
+  }
+}
